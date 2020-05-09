@@ -43,9 +43,7 @@ module.exports.createReport = async function (req, res) {
             patient.save();
 
             return res.json(200, {
-                data: {
-                    report: report
-                },
+                report:report,
                 message: 'Report Created..!!!'
             });
         }
@@ -70,10 +68,13 @@ module.exports.allReports = async function(req,res){
                                 .exec();
 
         if(report){
-            return res.json(200,{
-                message:'Here are the reports..!!!',    //Success
-                report : report
-            })
+
+            return res.json(report);
+
+            // return res.json(200,{
+            //     message:'Here are the reports..!!!',    //Success
+            //     report : report
+            // })
         }else{
             return res.json(404,{
                 message:'Not Found..!!'     //Failure
