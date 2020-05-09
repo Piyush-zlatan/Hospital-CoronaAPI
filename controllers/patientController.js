@@ -3,15 +3,15 @@ const Report = require('../models/report');
 
 module.exports.register = async function (req, res) {
 
-    let patient = await Patient.findOne(req.body.phoneNumber);
+    let patient = await Patient.findOne({phoneNumber:req.body.phoneNumber});
     if (patient) {
         return res.json({
             message: 'Patient Already Registered..!!',
             data: patient
         });
     } else {
-        console.log(req.body);
-        Patient.create(res.body, function (err, patient) {
+       // console.log(req.body);
+      let data =  await Patient.create(req.body, function (err, patient) {
             if (err) {
                 console.log(err);
                 return res.json(400, {
@@ -19,7 +19,8 @@ module.exports.register = async function (req, res) {
                 });
             }
             return res.json(200, {
-                message: 'Patient Successfully registered!!'
+                message: 'Patient Successfully registered!!',
+                data: data
             });
         })
     }
@@ -31,12 +32,12 @@ module.exports.createReport = async function (req, res) {
       
         console.log(req.params.id);
         let patient = await Patient.findById(req.params.id);
-        
+        console.log(req.user._id);
         if (patient != null) {
             let report = await Report.create({
-                doctor: req.doctor._id,
+                doctor: req.user._id,
                 status: req.body.status,
-                patient: req.body.patient
+                patient: req.params.id
             });
             patient.reports.push(report);
             patient.save();

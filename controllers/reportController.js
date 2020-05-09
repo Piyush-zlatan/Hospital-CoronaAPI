@@ -5,7 +5,7 @@ const Report = require('../models/report');
 module.exports.reports = async function (req, res) {
 
     try {
-        let report = await Report.find({ status: req.param.status });
+        let report = await Report.find({ status: req.params.status });
         if (report) {
             return res.json(200, {
                 message: ' Here are all the reports of this type',
