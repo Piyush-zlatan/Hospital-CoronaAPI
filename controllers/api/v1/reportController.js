@@ -1,4 +1,4 @@
-const Report = require('../models/report');
+const Report = require('../../../models/report');
 
 
 // Finding report of a particular status

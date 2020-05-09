@@ -1,5 +1,5 @@
-const Patient = require('../models/patient');
-const Report = require('../models/report');
+const Patient = require('../../../models/patient');
+const Report = require('../../../models/report');
 
 module.exports.register = async function (req, res) {
 
@@ -11,7 +11,7 @@ module.exports.register = async function (req, res) {
         });
     } else {
        // console.log(req.body);
-      let data =  await Patient.create(req.body, function (err, patient) {
+        Patient.create(req.body, function (err, p) {
             if (err) {
                 console.log(err);
                 return res.json(400, {
@@ -20,7 +20,7 @@ module.exports.register = async function (req, res) {
             }
             return res.json(200, {
                 message: 'Patient Successfully registered!!',
-                data: data
+                p
             });
         })
     }

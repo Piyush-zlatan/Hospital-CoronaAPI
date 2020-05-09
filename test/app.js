@@ -1,9 +1,7 @@
 const index = require('../index');
 const chai = require('chai');
-const expect = require('chai').expect;
 const request = require('supertest');
 const chaiHttp = require('chai-http');
-const mongoose = require('mongoose');
 const db = require('../config/mongoose');
 
 //const {except} = chai;
@@ -12,7 +10,7 @@ chai.use(chaiHttp);
 let should = chai.should(); 
 
 
-
+// Default user credentials
 const userCredentials = {
     username: 'Ramesh', 
     password: 'ramu'
@@ -33,16 +31,14 @@ describe('Server!',()=>{
     before(async ()=> {        
         //get token
         let resToken =  await loginWithDefaultUser();
-        token = resToken.body.data.token;       
+        token = resToken.body.data.token;     //set the token  
         
     })    
 
-
-
-
+    //Testing the get token function
     it("should retrieve the token",async () => {
             return await loginWithDefaultUser().then(res => {
-                console.log(res.body);
+           //     console.log(res.body);
                 res.status.should.equal(200);
                 res.body.data.token.should.not.be.empty;
             });
@@ -52,66 +48,85 @@ describe('Server!',()=>{
 
 
    
-    it('OK, Creating POST test',async(done)=>{
+    // it('OK, Creating POST test',async(done)=>{
+    //     request(index).post('/patients/5eb63ff303259a23988d8ec2/all_reports')
+    //     .set("Authorization",'Bearer' + token)
+    //     .send()
+    //     .expect(200)
+    //     .then(()=>{
+    //         return request(index).get('/patients/5eb63ff303259a23988d8ec2/all_reports')
+    //                     // .set("Authorization",'Bearer' +  token)    
+    //                     // .send()       
+    //                     .expect(200)
+    //                     .expect(res =>{                
+    //                         // res.body.should.be.an('object').to.have.lengthOf(1);    
+    //                         // let item = res.body[0];                            
+    //                         // item.should.have.property('title').to.equal(newProject.title);
+    //                         // item.should.have.property('summary').to.equal(newProject.summary);
+    //                         // item.should.have.property('description').to.equal(newProject.description);
+    //                         console.log(res);
+    //                     }); 
+    //                 }).catch(done)
+    // })         
+
+//Register patient
+describe('/POST Reigister',()=>{
+    it('New Patient', (done) => {
+        const patient = {
+          phoneNumber:12345673278283
+        }
+        request(index)
+          .post('/register_patient')
+          .set({"Authorization":'Bearer ' + token})
+          .send(patient)
+          .end((err, res) => {
+            console.log(res.body);
+            res.should.have.status(200);
+             res.body.should.be.a('object');
+             res.body.p.should.have.property('phoneNumber');
+            done();
+          });
+      });
+
+})
 
 
-        request(index).post('/patients/5eb63ff303259a23988d8ec2/all_reports')
-        .set("Authorization", token)
-        .send()
-        .expect(200)
-        .then(()=>{
-            return request(index).get('/patients/5eb63ff303259a23988d8ec2/all_reports')
-                        .set("Authorization", token)    
-                        .send()       
-                        .expect(200)
-                        .expect(res =>{                
-                            // res.body.should.be.an('object').to.have.lengthOf(1);    
-                            // let item = res.body[0];                            
-                            // item.should.have.property('title').to.equal(newProject.title);
-                            // item.should.have.property('summary').to.equal(newProject.summary);
-                            // item.should.have.property('description').to.equal(newProject.description);
-                            console.log(res);
-                        }); 
-                    }).catch(done)
-    })         
-
-
-
-
-
-            //console.log(token);
-            // await request(index).post('/patients/5eb63ff303259a23988d8ec2/all_reports')
-            // .set("Authorization", token)
-            // .send()
-            // .expect(200)
-            // .expect((res)=>{
-            //     console.log(res);
-            // })
-            // .then(()=>{
-            //     request(index).get('/patients/5eb63ff303259a23988d8ec2/all_reports')
-            //     .set("Authorization", token)
-            //     .send()
-            //     .expect(200,done);
-            // }).catch(done)
-
-          
-
-
-
-
-
-
-
+describe('/POST Report',()=>{
     
-        // request(index).get('/patients/5eb63ff303259a23988d8ec2/all_reports')
-        //                 .then((res)=>{
-        //                     const body = res.body;
-        //                     console.log(body);
-        //                     expect(res.statusCode).to.equal(200);
-        //                     // expect(body).to.contain.property('_id');
-        //                     // expect(body).to.contain.property('status');
-        //                     done();
-        //                 }).catch(done);    
+    it('Create Report',(done)=>{
+        let report = {
+            status:'Negative',
+            patient:'5eb63ff303259a23988d8ec2'
+        }
+        request(index)
+        .post("/patients/5eb63ff303259a23988d8ec2/all_reports")
+        .set({"Authorization":'Bearer ' + token})
+        .send(report)
+        .expect(200)
+            .end((err,res)=>{
+                console.log('Bearer ' + token);
+                done();
+            })
+        
        
-   // });
+    })
+})
+    
+//Get All the reports
+describe('/GET Report',()=>{
+
+    it('Get Report',(done)=>{
+        request(index)
+        .get("/patients/5eb63ff303259a23988d8ec2/all_reports")
+        .set({"Authorization":'Bearer ' + token})
+        .expect(200)
+            .end((err,res)=>{
+                console.log('Bearer ' + token);
+                done();
+            })
+        
+       
+    })
+})
+
 })

@@ -8,7 +8,7 @@ const passportJWT = require('./config/passport-jwt-strategy');
 app.use(express.urlencoded());      //using middlewares 
 app.use(express.json());
 
-app.use('/',require('./routes'));
+app.use('/',require('./routes/api/v1'));
 app.listen(port,function(err){
     if(err){
         console.log(`Error in running on port: ${port}`);
