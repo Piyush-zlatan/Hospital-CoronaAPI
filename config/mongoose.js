@@ -1,6 +1,6 @@
 const mongoose  = require('mongoose');  //require libraray
 
-mongoose.connect('mongodb://localhost/hospital_db');    //connect to db
+mongoose.connect('mongodb://localhost/hospital_db_main');    //connect to db
 
 const db = mongoose.connection;         //aquire the connection to check if it is succussfull
 

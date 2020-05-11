@@ -73,7 +73,7 @@ describe('Server!',()=>{
 describe('/POST Reigister',()=>{
     it('New Patient', (done) => {
         const patient = {
-          phoneNumber:12345673278283
+          phoneNumber:123
         }
         request(index)
           .post('/register_patient')
@@ -104,7 +104,7 @@ describe('/POST Report',()=>{
         .send(report)
         .expect(200)
             .end((err,res)=>{
-                console.log('Bearer ' + token);
+                res.status.should.equal(200);
                 done();
             })
         
@@ -121,7 +121,7 @@ describe('/GET Report',()=>{
         .set({"Authorization":'Bearer ' + token})
         .expect(200)
             .end((err,res)=>{
-                console.log('Bearer ' + token);
+                res.status.should.equal(200);
                 done();
             })
         
